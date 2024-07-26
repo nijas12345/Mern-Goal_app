@@ -27,6 +27,7 @@ const registerUser = asyncHandler(async(req,res)=>{
         _id:user.id,
         name:user.name,
         email:user.email,
+        profileUrl:user.profileUrl,
         token:generateToken(user.id)
       })     
     }
@@ -43,6 +44,7 @@ const loginUser = asyncHandler(async(req,res)=>{
             _id:user.id,
             name:user.name,
             email:user.email,
+            profileUrl:user.profileUrl,
             token:generateToken(user.id)
         })
     }
@@ -52,13 +54,41 @@ const loginUser = asyncHandler(async(req,res)=>{
     }
 })
 const getMe = asyncHandler(async(req,res)=>{
-    const{_id,email,name} = await User.findById(req.user.id)
-    res.status(200).json({
-        id:_id,
-        name,
-        email
-    })
+    
+    res.status(200).json(req.user)
 })
+
+const editUser=asyncHandler(async(req,res)=>{
+    const {userId,name,email}=req.body
+    console.log("headers",req.headers);
+    console.log("edit in controller",userId,name,email);
+    const user=await User.findByIdAndUpdate(userId,{name,email},{new:true})
+  
+    if(user){
+        res.status(200).json({
+          _id: user.id,
+          name: user.name,
+          email: user.email,
+          profileUrl: user.profileUrl,
+          token: req.token
+        })
+    }else{
+        res.status(404)
+        throw new Error('User not Found')
+    }
+  })
+
+  const profileUpload = asyncHandler(async (req, res) => {
+    const url = req.body.url;
+    console.log("profile url",url);
+  
+    const user = await User.findByIdAndUpdate(req.user.id, {
+      profileUrl: url
+    }, { new: true });
+  
+    
+    res.status(200).json(user);
+  });
 
 const generateToken = (id) =>{
    return jwt.sign({id},process.env.JWT_SECRET,{expiresIn:'30d'})
@@ -67,5 +97,7 @@ const generateToken = (id) =>{
 module.exports = {
     registerUser,
     loginUser,
-    getMe
+    getMe,
+    editUser,
+    profileUpload
 }

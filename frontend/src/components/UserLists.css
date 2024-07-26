@@ -1,0 +1,22 @@
+/* Add padding to table cells */
+table th, table td {
+    padding: 10px;
+  }
+  
+  /* Add margin to buttons to create space between them */
+  .table-button .btn, .table-button .btn-1 {
+    margin: 0 5px; /* Adjust the values to your preference */
+  }
+  
+  /* Adjust the space between the image and text in the cell */
+  .userlistprofile {
+    margin-right: 10px; /* Adjust the value to your preference */
+  }
+  
+  /* Optional: Add padding to the table for more space overall */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px; /* Adjust the value to your preference */
+  }
+  
